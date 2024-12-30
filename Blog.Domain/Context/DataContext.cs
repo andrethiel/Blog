@@ -1,4 +1,5 @@
-﻿using Blog.Domain.Models;
+﻿using Blog.Domain.DataConnection;
+using Blog.Domain.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -16,9 +17,9 @@ namespace Blog.Domain.Context
     public class DataContext<TDocument> : IDataContext<TDocument> where TDocument : IDocument
     {
         private readonly IMongoCollection<TDocument> _collection;
-        public DataContext(IOptions<ConnectionString> _connectionString)
+        public DataContext(IDataConnection _connectionString)
         {
-            var settings = MongoClientSettings.FromConnectionString("mongodb+srv://andrethiel007:Aj95vwIn0Hd759gs@cluster0.14cuj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+            var settings = MongoClientSettings.FromConnectionString(_connectionString.DefaultConnection);
             var client = new MongoClient(settings).GetDatabase("Blog");
             _collection = client.GetCollection<TDocument>(typeof(TDocument).Name);
         }

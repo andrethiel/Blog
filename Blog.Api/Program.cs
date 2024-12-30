@@ -7,9 +7,12 @@ using Microsoft.Extensions.FileProviders;
 using System.Text.Json.Serialization;
 using Blog.Domain.DataConnection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.Configure<DataConnection>(builder.Configuration.GetSection("ConnectionStrings"));
+builder.Services.AddScoped<IDataConnection>(services => services.GetRequiredService<IOptions<DataConnection>>().Value);
 
 builder.Services.AddScoped(typeof(IDataContext<>), typeof(DataContext<>));
 builder.Services.AddScoped<IPostRepository, PostRepository>();
@@ -19,7 +22,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-builder.Services.Configure<DataConnection>(builder.Configuration);
+
 
 
 var app = builder.Build();

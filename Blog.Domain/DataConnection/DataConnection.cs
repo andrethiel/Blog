@@ -8,11 +8,8 @@ using System.Threading.Tasks;
 
 namespace Blog.Domain.DataConnection
 {
-    public class DataConnection
+    public class DataConnection : IDataConnection
     {
-        public string ConnectionString(IConfiguration configuration)
-        {
-            return configuration.GetConnectionString("DefaultConnection");
-        }
+        public string DefaultConnection { get; set; }
     }
 }
